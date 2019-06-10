@@ -14,6 +14,7 @@ namespace BattleOfTheShipsData
 		public uint Y { get; set; }
 		public bool IsShip { get; set; }
 		public bool WasHit { get; set; }
+		public bool IsHidden { get; set; }
 
 		public MapPoint(int x, int y)
 		{

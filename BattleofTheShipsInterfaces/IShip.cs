@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace BattleofTheShipsInterfaces
 {
-	public interface IMapPoint
+	public interface IShip
 	{
-		uint X { get; set; }
-		uint Y { get; set; }
-		bool IsShip { get; set; }
-		bool WasHit { get; set; }
-		bool IsHidden { get; set; }
+		IMapPoint[] Area { get; set; }
+		bool WasHit { get; }
+		bool WasSank { get; }
 	}
 }

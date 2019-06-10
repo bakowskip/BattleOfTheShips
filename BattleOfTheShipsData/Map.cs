@@ -9,22 +9,35 @@ namespace BattleOfTheShipsData
 {
 	public class Map : IGameMap
 	{
-
 		private MapPoint[,] mapPoints;
 
-		public void SetupMap(int sizeX, int sizeY)
+		public uint MaxX { get => (uint)(mapPoints?.GetLength(0) ?? 0); }
+		public uint MaxY { get => (uint)(mapPoints?.GetLength(1) ?? 0); }
+
+		public bool SetupMap(int sizeX, int sizeY)
 		{
-			//mapPoints = new MapPoint[sizeX, sizeY];
-			return;
+			if (sizeX > 0 && sizeY > 0)
+			{
+				mapPoints = new MapPoint[sizeX, sizeY];
+				return true;
+			}
+			return false;
 		}
 
-		public void PlaceShip(IMapPoint startingPoint, uint size, char direction)
+		public bool PlaceShip(IMapPoint startingPoint, ushort size, char direction)
 		{
-			return;
+
+			return false;
 		}
-		public void PlaceShot(IMapPoint target)
+		public IShotResult PlaceShot(IMapPoint target)
 		{
-			return;
+			if (mapPoints[target.X, target.Y].IsShip)
+			{
+
+			}
+			else
+				return new ShotResult();
+			return null;
 		}
 	}
 }

@@ -10,10 +10,15 @@ namespace BattleOfTheShipsData.Exceptions
 	{
 		public int X { get; set; }
 		public int Y { get; set; }
-		public MapPointException(int x, int y, string message) : base(message)
+		public MapPointException(int x, int y) : base("Invalid Map Point used.")
 		{
 			this.X = x;
 			this.Y = y;			
+		}
+		public MapPointException(int x, int y, string message) : base(message)
+		{
+			this.X = x;
+			this.Y = y;
 		}
 
 		public MapPointException(int x, int y, string message, Exception innerException) : base(message,innerException)
