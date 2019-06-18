@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9428A966-D70D-4467-BB22-1B1526310128}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BattleOfTheShipsData</RootNamespace>
-    <AssemblyName>BattleOfTheShipsData</AssemblyName>
+    <ProjectGuid>{7C4C9E5A-2C0C-4F55-899D-9BA76C766EA3}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>BattleOfTheShips</RootNamespace>
+    <AssemblyName>BattleOfTheShips</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,18 +43,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\InvalidShotException.cs" />
-    <Compile Include="Exceptions\MapPointException.cs" />
-    <Compile Include="Exceptions\ShipException.cs" />
-    <Compile Include="Map.cs" />
-    <Compile Include="MapPoint.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Ship.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BattleOfTheShipsConsolePresenter\BattleOfTheShipsConsolePresenter.csproj">
+      <Project>{c98df12c-e33e-4d03-a773-69b206cef9d9}</Project>
+      <Name>BattleOfTheShipsConsolePresenter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BattleOfTheShipsData\BattleOfTheShipsData.csproj">
+      <Project>{9428a966-d70d-4467-bb22-1b1526310128}</Project>
+      <Name>BattleOfTheShipsData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BattleofTheShipsInterfaces\BattleofTheShipsInterfaces.csproj">
       <Project>{96d0b20b-de26-411d-a070-ab000e34adfb}</Project>
       <Name>BattleofTheShipsInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BattleOfTheShipsLogic\BattleOfTheShipsLogic.csproj">
+      <Project>{e3705995-4a14-4067-bc35-b8d184890a40}</Project>
+      <Name>BattleOfTheShipsLogic</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

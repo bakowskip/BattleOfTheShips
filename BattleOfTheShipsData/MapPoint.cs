@@ -10,24 +10,21 @@ namespace BattleOfTheShipsData
 {
     public sealed class MapPoint : IMapPoint
     {
-		public uint X { get; set; }
-		public uint Y { get; set; }
-		public bool IsShip { get; set; }
+		public int X { get; set; }
+		public int Y { get; set; }
+		public bool IsShip { get => Ship != null; }
 		public bool WasHit { get; set; }
 		public bool IsHidden { get; set; }
+		public IShip Ship { get; set; }
+		public bool IsBlocked { get; set; }
 
 		public MapPoint(int x, int y)
 		{
-			if (x < 1 || y < 1)
+			if (x < 0 || y < 0)
 				throw new MapPointException(x, y, $"Invalid coordinate {x},{y}");
 
-			this.X = (uint)x;
-			this.Y = (uint)y;
-		}
-
-		public MapPoint(int x, int y, bool isShip) : this(x,y)
-		{
-			this.IsShip = isShip;
+			this.X = x;
+			this.Y = y;			
 		}
     }
 }

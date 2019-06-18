@@ -43,8 +43,8 @@
   <ItemGroup>
     <Compile Include="IGameMap.cs" />
     <Compile Include="IMapPoint.cs" />
+    <Compile Include="IPresenter.cs" />
     <Compile Include="IShip.cs" />
-    <Compile Include="IShotResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

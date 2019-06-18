@@ -21,25 +21,25 @@ namespace BattleOfTheShipsTests
 		{
 			Map m = new Map();
 			Assert.IsTrue(m.SetupMap(10, 5));
-			Assert.AreEqual<uint>(10, m.MaxX);
-			Assert.AreEqual<uint>(5, m.MaxY);
+			Assert.AreEqual<int>(10, m.MaxX);
+			Assert.AreEqual<int>(5, m.MaxY);
 		}
 		[TestMethod]
-		public void MapCreatedIncorrectlyForNegativeX()
+		public void MapCreatedIncorrectlyForZeroX()
 		{
 			Map m = new Map();
-			Assert.IsFalse(m.SetupMap(-10, 5));
-			Assert.AreEqual<uint>(0, m.MaxX);
-			Assert.AreEqual<uint>(0, m.MaxY);
+			Assert.IsFalse(m.SetupMap(0, 5));
+			Assert.AreEqual<int>(0, m.MaxX);
+			Assert.AreEqual<int>(0, m.MaxY);
 		}
 
 		[TestMethod]
-		public void MapCreatedIncorrectlyForNegativeY()
+		public void MapCreatedIncorrectlyForZeroY()
 		{
 			Map m = new Map();
-			Assert.IsFalse(m.SetupMap(10, -5));
-			Assert.AreEqual<uint>(0, m.MaxX);
-			Assert.AreEqual<uint>(0, m.MaxY);
+			Assert.IsFalse(m.SetupMap(10, 0));
+			Assert.AreEqual<int>(0, m.MaxX);
+			Assert.AreEqual<int>(0, m.MaxY);
 		}
 
 		[TestMethod]

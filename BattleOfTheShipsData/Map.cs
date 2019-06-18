@@ -1,4 +1,5 @@
-﻿using BattleofTheShipsInterfaces;
+﻿using BattleOfTheShipsData.Exceptions;
+using BattleofTheShipsInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,35 +10,50 @@ namespace BattleOfTheShipsData
 {
 	public class Map : IGameMap
 	{
-		private MapPoint[,] mapPoints;
+		private IMapPoint[,] _mapPoints;
+		private IList<IShip> _ships;
 
-		public uint MaxX { get => (uint)(mapPoints?.GetLength(0) ?? 0); }
-		public uint MaxY { get => (uint)(mapPoints?.GetLength(1) ?? 0); }
+		public int MaxX { get => (int)(_mapPoints?.GetLength(0) ?? 0); }
+		public int MaxY { get => (int)(_mapPoints?.GetLength(1) ?? 0); }
+		public IMapPoint[,] MapArea { get => _mapPoints; }
+
+		public IEnumerable<IShip> Ships { get => _ships; }
 
 		public bool SetupMap(int sizeX, int sizeY)
 		{
 			if (sizeX > 0 && sizeY > 0)
 			{
-				mapPoints = new MapPoint[sizeX, sizeY];
+				_mapPoints = new MapPoint[sizeX, sizeY];
+				for (int x = 0; x < sizeX; x++)
+					for (int y = 0; y < sizeY; y++)
+						_mapPoints[x, y] = new MapPoint(x, y);
 				return true;
 			}
 			return false;
 		}
 
-		public bool PlaceShip(IMapPoint startingPoint, ushort size, char direction)
+		//FIX IT for both directions
+		public IShip PlaceShip(IMapPoint[] shipArea)
 		{
-
-			return false;
-		}
-		public IShotResult PlaceShot(IMapPoint target)
-		{
-			if (mapPoints[target.X, target.Y].IsShip)
+			//mark marigin
+			foreach(IMapPoint mp in shipArea)
 			{
-
+				for (int x = -1; x < 2; x++)
+				{
+					for (int y = -1; y < 2; y++)
+						MapArea[mp.X + x, mp.Y + y].IsBlocked = true;
+				}
+				
 			}
-			else
-				return new ShotResult();
-			return null;
+			return new Ship(shipArea);
+		}
+
+		public bool PlaceShot(int x, int y)
+		{
+			if (x >= _mapPoints.GetLength(0) || y >= _mapPoints.GetLength(1) || x <0 || y < 0)
+				throw new InvalidShotException(x, y);
+
+			return _mapPoints[x, y].IsShip;
 		}
 	}
 }

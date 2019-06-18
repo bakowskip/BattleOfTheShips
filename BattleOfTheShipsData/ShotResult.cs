@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BattleOfTheShipsData
 {
-	public class ShotResult : IShotResult
+	public class ShotResult
 	{
 		private bool _hit;
 		private bool _sank;

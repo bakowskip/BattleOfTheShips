@@ -9,9 +9,10 @@ namespace BattleofTheShipsInterfaces
     public interface IGameMap
     {
 		bool SetupMap(int sizeX, int sizeY);
-		bool PlaceShip(IMapPoint startingPoint, ushort size, char direction);
-		IShotResult PlaceShot(IMapPoint target);
-		uint MaxX { get; }
-		uint MaxY { get; }
+		IShip PlaceShip(IMapPoint[] shipArea);
+		int MaxX { get; }
+		int MaxY { get; }
+		IMapPoint[,] MapArea { get; }
+		IEnumerable<IShip> Ships { get; }
 	}
 }

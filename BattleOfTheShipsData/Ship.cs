@@ -18,6 +18,10 @@ namespace BattleOfTheShipsData
 		public Ship(IMapPoint[] shipArea)
 		{
 			Area = shipArea;
+			foreach (IMapPoint mp in shipArea)
+			{
+				mp.Ship = this;
+			}
 		}
 	}
 }
