@@ -85,7 +85,7 @@ namespace BattleOfTheShipsLogic
 			Ships = new List<IShip>();
 		}
 
-		public void PlaceShips(int shipSize, int shipCount)
+		public void PlaceShips(int shipCount, int shipSize)
 		{
 			if (shipSize > _map.MaxX - 2 && shipSize > _map.MaxY -2)
 			{

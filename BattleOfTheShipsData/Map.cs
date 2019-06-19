@@ -23,6 +23,7 @@ namespace BattleOfTheShipsData
 		{
 			if (sizeX > 0 && sizeY > 0)
 			{
+				_ships = new List<IShip>();
 				_mapPoints = new MapPoint[sizeX, sizeY];
 				for (int x = 0; x < sizeX; x++)
 					for (int y = 0; y < sizeY; y++)
@@ -45,7 +46,9 @@ namespace BattleOfTheShipsData
 				}
 				
 			}
-			return new Ship(shipArea);
+			var newShip = new Ship(shipArea);
+			_ships.Add(newShip);
+			return newShip;
 		}
 
 		public bool PlaceShot(int x, int y)

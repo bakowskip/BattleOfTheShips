@@ -13,8 +13,6 @@ namespace BattleOfTheShipsConsolePresenter
 		{
 			Console.Clear();
 
-			var strBldr = new StringBuilder();
-
 			Console.BackgroundColor = ConsoleColor.White;
 			Console.ForegroundColor = ConsoleColor.Black;
 			Console.WriteLine("   A  B  C  D  E  F  G  H  I  J ");
@@ -37,7 +35,17 @@ namespace BattleOfTheShipsConsolePresenter
 						if (map.MapArea[x, y].IsShip)
 						{
 							Console.ForegroundColor = map.MapArea[x, y].Ship.WasSank ? ConsoleColor.Red : ConsoleColor.Yellow;
-							Console.Write(" █ ");
+							if (map.MapArea[x - 1, y].IsShip)
+								Console.Write("█");
+							else
+								Console.Write(" ");
+
+							Console.Write("█");
+
+							if (map.MapArea[x + 1, y].IsShip)
+								Console.Write("█");
+							else
+								Console.Write(" ");
 						}
 						else
 						{
@@ -49,6 +57,16 @@ namespace BattleOfTheShipsConsolePresenter
 				Console.WriteLine();
 			}
 			
+		}
+
+		public void ShowHitResult(IMapPoint target, bool wasHit, bool wasSank)
+		{
+
+		}
+
+		public void ShowHitResult(int X, int Y, bool wasHit, bool wasSank)
+		{
+
 		}
 	}
 }

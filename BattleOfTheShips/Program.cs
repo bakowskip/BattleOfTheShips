@@ -4,6 +4,7 @@ using BattleofTheShipsInterfaces;
 using BattleOfTheShipsLogic;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,9 @@ namespace BattleOfTheShips
 		private static IGameMap _gameMap;
 		private static IPresenter _presenter;
 		private static ComputerPlayer computerPlayer;
+		private static int _mapXSize;
+		private static int _mapYSize;
+		private static Dictionary<int, int> shipsConfig;
 		static void Main(string[] args)
 		{
 			_presenter = new ConsolePresenter();
@@ -24,8 +28,17 @@ namespace BattleOfTheShips
 
 
 			computerPlayer = new ComputerPlayer(_gameMap);
-			computerPlayer.PlaceShips(5, 1);
-			computerPlayer.PlaceShips(4, 2);
+			try
+			{
+				computerPlayer.PlaceShips(1, 5);
+				computerPlayer.PlaceShips(3, 4);
+			}
+			catch (BattleOfTheShipsData.Exceptions.ShipException shipEx)
+			{
+				Console.WriteLine("Error while placing ship: " + shipEx.Message);
+				Console.ReadLine();
+				return;
+			}
 			
 			foreach (IMapPoint mp in _gameMap.MapArea)
 			{
@@ -35,5 +48,39 @@ namespace BattleOfTheShips
 
 			Console.ReadLine();
 		}
+
+
+		static void LoadConfiguration()
+		{
+			shipsConfig = new Dictionary<int, int>();
+
+			var configXSize = ConfigurationManager.AppSettings["MaxXSize"];
+			var configYSize = ConfigurationManager.AppSettings["MaxXSize"];
+			var shipsDefinition = ConfigurationManager.AppSettings["ShipSizes"];
+
+
+			if (!int.TryParse(configXSize, out _mapXSize))
+				_mapXSize = 10;
+
+			if (!int.TryParse(configYSize, out _mapYSize))
+				_mapYSize = 10;
+
+			if (!string.IsNullOrEmpty(shipsDefinition))
+			{
+				int shipSize = 0;
+				int shipCount = 0;
+
+				var splitDefs = shipsDefinition.Split(new char[1] { ';' },StringSplitOptions.RemoveEmptyEntries);
+
+
+			}
+			else
+			{
+				shipsConfig.Add(1, 5);
+				shipsConfig.Add(3, 4);
+			}
+		}
+
+
 	}
 }
