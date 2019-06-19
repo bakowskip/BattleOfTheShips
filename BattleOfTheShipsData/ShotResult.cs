@@ -10,10 +10,8 @@ namespace BattleOfTheShipsData
 {
 	public class ShotResult
 	{
-		private bool _hit;
-		private bool _sank;
-		public bool WasHit { get => _hit; }
-		public bool WasSank { get => _sank; }
+		public bool WasHit { get; set; }
+		public bool WasSank { get; set; }
 
 		/// <summary>
 		/// Parametrized constructor for setting hit and sank values
@@ -22,19 +20,16 @@ namespace BattleOfTheShipsData
 		/// <param name="wasSank"></param>
 		public ShotResult(bool wasHit, bool wasSank)
 		{
-			if (!wasHit && wasSank)
-				throw new InvalidShotResultException();
-
-			_hit = wasHit;
-			_sank = wasSank;
+			WasHit= wasHit;
+			WasSank = wasSank;
 		}
 		/// <summary>
 		/// Default constructor for missed shot
 		/// </summary>
 		public ShotResult()
 		{
-			_hit = false;
-			_sank = false;
+			WasHit = false;
+			WasSank = false;
 		}
 	}
 }

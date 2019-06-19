@@ -27,7 +27,10 @@ namespace BattleOfTheShipsData
 				_mapPoints = new MapPoint[sizeX, sizeY];
 				for (int x = 0; x < sizeX; x++)
 					for (int y = 0; y < sizeY; y++)
+					{
 						_mapPoints[x, y] = new MapPoint(x, y);
+						_mapPoints[x, y].IsHidden = true;
+					}
 				return true;
 			}
 			return false;

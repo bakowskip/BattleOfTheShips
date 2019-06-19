@@ -1,4 +1,6 @@
-﻿using BattleofTheShipsInterfaces;
+﻿using BattleOfTheShipsData;
+using BattleOfTheShipsData.Exceptions;
+using BattleofTheShipsInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +11,22 @@ namespace BattleOfTheShipsConsolePresenter
 {
 	public class ConsolePresenter : IPresenter
 	{
+		private const int START_CHAR = (int)'A';
 		public void ShowMap(IGameMap map)
 		{
 			Console.Clear();
 
 			Console.BackgroundColor = ConsoleColor.White;
 			Console.ForegroundColor = ConsoleColor.Black;
-			Console.WriteLine("   A  B  C  D  E  F  G  H  I  J ");
+			
+			Console.Write("  ");
+			for (int i = 0; i < map.MaxX;i++)
+			{
+				
+				Console.Write(" " + Convert.ToChar(START_CHAR + i) + " ");
+			}
+
+			Console.WriteLine("");
 			
 			for (int y = 0; y < map.MaxY; y++)
 			{
@@ -55,18 +66,56 @@ namespace BattleOfTheShipsConsolePresenter
 					}
 				}
 				Console.WriteLine();
-			}
-			
+			}			
 		}
 
 		public void ShowHitResult(IMapPoint target, bool wasHit, bool wasSank)
 		{
+			var strBuilder = new StringBuilder();
+			Console.BackgroundColor = ConsoleColor.White;
+			Console.ForegroundColor = ConsoleColor.Black;
 
+			strBuilder.Append($"Your shot at {Convert.ToChar(START_CHAR + target.X)}{target.Y+1} ");
+			if (!wasHit)
+				strBuilder.Append("missed");
+			else
+			{
+				if (wasSank)
+					strBuilder.Append(" hit and sank a ship!");
+				else
+					strBuilder.Append(" hit and did not sink a ship!");
+			}		
+
+			Console.WriteLine(strBuilder.ToString());
 		}
 
-		public void ShowHitResult(int X, int Y, bool wasHit, bool wasSank)
+		public IMapPoint ConvertUserInputToMapPoint(string coordinates)
 		{
+			int x=0,y=0;
 
+			try 
+			{
+				char cX = coordinates.ToCharArray()[0];				
+
+				x = (int)cX - START_CHAR;
+				y = int.Parse(coordinates.Substring(1)) - 1;
+			}
+			catch 
+			{
+				throw new MapPointException(x, y, $"Invalit target coordinates: {coordinates}");
+			}
+
+			return new MapPoint(x, y);
+		}
+
+		public void ShowMessage(string message, bool wait)
+		{
+			Console.BackgroundColor = ConsoleColor.Black;
+			Console.ForegroundColor = ConsoleColor.White;
+			Console.WriteLine(message);
+
+			if (wait)
+				Console.ReadKey();
 		}
 	}
 }

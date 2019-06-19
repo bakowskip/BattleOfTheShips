@@ -136,7 +136,7 @@ namespace BattleOfTheShipsTests
 
 			_player.Ships = new IShip[] {shipA.Object, shipB.Object};
 
-			Assert.IsTrue(_player.IsGameOver());
+			Assert.IsTrue(_player.IsGameOver);
 		}
 
 		[TestMethod]
@@ -151,7 +151,7 @@ namespace BattleOfTheShipsTests
 
 			_player.Ships = new IShip[] { shipA.Object, shipB.Object };
 
-			Assert.IsFalse(_player.IsGameOver());
+			Assert.IsFalse(_player.IsGameOver);
 		}
 	}
 }

@@ -14,6 +14,7 @@ namespace BattleOfTheShipsLogic
 		
 		private IGameMap _map;
 
+		public bool IsGameOver { get => Ships.All(s => s.WasSank); }
 		private bool CanShipBePlacedHorizontally(IMapPoint origin, int size)
 		{
 			if (origin.X + size >= _map.MaxX)
@@ -144,14 +145,22 @@ namespace BattleOfTheShipsLogic
 			}
 		}
 
-		public bool CheckShot(IMapPoint shotPlace)
+		public ShotResult CheckShot(IMapPoint shotPlace)
 		{
-			return false;
+			var sr = new ShotResult();
+
+			_map.MapArea[shotPlace.X, shotPlace.Y].WasHit = true;
+			_map.MapArea[shotPlace.X, shotPlace.Y].IsHidden = false;
+
+			if (_map.MapArea[shotPlace.X, shotPlace.Y].IsShip)
+			{
+				_map.MapArea[shotPlace.X, shotPlace.Y].WasHit = true;
+				sr.WasHit = true;
+				sr.WasSank = _map.MapArea[shotPlace.X, shotPlace.Y].Ship.WasSank;
+			}
+			return sr;
 		}
 
-		public bool IsGameOver()
-		{
-			return Ships.All(s => s.WasSank);
-		}
+		
     }
 }
