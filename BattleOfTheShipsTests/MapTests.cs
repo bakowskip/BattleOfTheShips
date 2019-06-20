@@ -1,74 +1,67 @@
 ﻿using BattleOfTheShipsData;
+using BattleofTheShipsInterfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Moq;
 
 namespace BattleOfTheShipsTests
 {
 	[TestClass]
 	public class MapTests
 	{
+		Mock<IMapPoint>[] mps;
+		Map map;
 		[TestInitialize]
 		public void TestSetup()
 		{
+			map = new Map();
 
+			mps = new Mock<IMapPoint>[4];
+			for (int i = 0; i < 4; i++)
+			{
+				mps[i] = new Mock<IMapPoint>();
+				mps[i].Setup(mp => mp.X).Returns(i + 1);
+				mps[i].Setup(mp => mp.Y).Returns(4);
+				mps[i].Setup(mp => mp.WasHit).Returns(false);
+				mps[i].Setup(mp => mp.IsShip).Returns(false);
+				mps[i].Setup(mp => mp.IsBlocked).Returns(false);
+			}			
 		}
+
 		[TestMethod]
 		public void MapCreatedCorrectly()
-		{
-			Map m = new Map();
-			Assert.IsTrue(m.SetupMap(10, 5));
-			Assert.AreEqual<int>(10, m.MaxX);
-			Assert.AreEqual<int>(5, m.MaxY);
+		{			
+			Assert.IsTrue(map.SetupMap(10, 5));
+			Assert.AreEqual(10, map.MaxX);
+			Assert.AreEqual(5, map.MaxY);
 		}
 		[TestMethod]
 		public void MapCreatedIncorrectlyForZeroX()
 		{
-			Map m = new Map();
-			Assert.IsFalse(m.SetupMap(0, 5));
-			Assert.AreEqual<int>(0, m.MaxX);
-			Assert.AreEqual<int>(0, m.MaxY);
+			Assert.IsFalse(map.SetupMap(0, 5));
+			Assert.AreEqual(0, map.MaxX);
+			Assert.AreEqual(0, map.MaxY);
 		}
 
 		[TestMethod]
 		public void MapCreatedIncorrectlyForZeroY()
 		{
-			Map m = new Map();
-			Assert.IsFalse(m.SetupMap(10, 0));
-			Assert.AreEqual<int>(0, m.MaxX);
-			Assert.AreEqual<int>(0, m.MaxY);
+			Assert.IsFalse(map.SetupMap(10, 0));
+			Assert.AreEqual(0, map.MaxX);
+			Assert.AreEqual(0, map.MaxY);
 		}
 
 		[TestMethod]
 		public void ShipPlacedCorrectly()
 		{
+			Assert.IsTrue(map.SetupMap(10, 10));
 
+			var ship = map.PlaceShip(new IMapPoint[] { mps[0].Object, mps[1].Object, mps[2].Object, mps[3].Object });
+			Assert.IsNotNull(ship);
+			Assert.IsInstanceOfType(ship, typeof(IShip));
+			Assert.IsNotNull(ship.Area);
+			Assert.AreEqual(4, ship.Area.Length);
+			Assert.IsFalse(ship.WasHit);
+			Assert.IsFalse(ship.WasSank);
 		}
-
-		[TestMethod]
-		public void MultipleShipsPlacedCorrectly()
-		{
-
-		}
-
-		[TestMethod]
-		public void ShotCorrectHitNotSank()
-		{ }
-
-		[TestMethod]
-		public void ShotCorrectHitSank()
-		{ }
-
-		[TestMethod]
-		public void ShotMiss()
-		{ }
-
-		[TestMethod]
-		public void ShotOutOfBounds()
-		{ }
-
 	}
 }

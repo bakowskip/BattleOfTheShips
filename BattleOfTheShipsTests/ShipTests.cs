@@ -1,6 +1,7 @@
 ﻿using BattleOfTheShipsData;
 using BattleofTheShipsInterfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,39 @@ namespace BattleOfTheShipsTests
 	[TestClass]
 	public class ShipTests
 	{
-		private IShip _ship;
+		Ship _ship;
+		Mock<IMapPoint> shotShipPoint;
+		Mock<IMapPoint> okShipPointA;
+		Mock<IMapPoint> okShipPointB;
 
 		[TestInitialize]
 		public void ShipSetup()
 		{
-			var mp = new MapPoint[] { new MapPoint(1, 1) { WasHit = true }, new MapPoint(1, 2), new MapPoint(1, 3) };
+			shotShipPoint = new Mock<IMapPoint>();
+			shotShipPoint.Setup(_ => _.IsShip).Returns(true);
+			shotShipPoint.Setup(_ => _.WasHit).Returns(true);
+			shotShipPoint.Setup(_ => _.IsBlocked).Returns(true);
+			shotShipPoint.Setup(_ => _.IsHidden).Returns(false);
+			shotShipPoint.Setup(_ => _.X).Returns(0);
+			shotShipPoint.Setup(_ => _.Y).Returns(0);
+
+			okShipPointA = new Mock<IMapPoint>();
+			okShipPointA.SetupGet(_ => _.IsShip).Returns(true);
+			okShipPointA.SetupGet(_ => _.IsBlocked).Returns(true);
+			okShipPointA.SetupGet(_ => _.IsHidden).Returns(true);
+			okShipPointA.SetupGet(_ => _.X).Returns(0);
+			okShipPointA.SetupGet(_ => _.Y).Returns(1);
+			okShipPointA.SetupProperty(_ => _.WasHit, false);
+
+			okShipPointB = new Mock<IMapPoint>();
+			okShipPointB.SetupGet(_ => _.IsShip).Returns(true);
+			okShipPointB.SetupGet(_ => _.IsBlocked).Returns(true);
+			okShipPointB.SetupGet(_ => _.IsHidden).Returns(true);
+			okShipPointB.SetupGet(_ => _.X).Returns(0);
+			okShipPointB.SetupGet(_ => _.Y).Returns(2);
+			okShipPointB.SetupProperty(_ => _.WasHit, false);
+
+			var mp = new IMapPoint[3] { shotShipPoint.Object, okShipPointA.Object, okShipPointB.Object };
 			_ship = new Ship(mp);
 			
 		}
@@ -32,7 +60,7 @@ namespace BattleOfTheShipsTests
 		[TestMethod]
 		public void ShipCorrectlyReportedAsSank()
 		{
-			var mp = new MapPoint[] { new MapPoint(1, 1) { WasHit = true } };
+			var mp = new IMapPoint[2] { shotShipPoint.Object, shotShipPoint.Object };
 			_ship = new Ship(mp);
 
 			Assert.IsTrue(_ship.WasHit);

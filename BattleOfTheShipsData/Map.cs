@@ -19,6 +19,8 @@ namespace BattleOfTheShipsData
 
 		public IEnumerable<IShip> Ships { get => _ships; }
 
+		IMapPoint IGameMap.this[int x, int y] => throw new NotImplementedException();
+
 		public bool SetupMap(int sizeX, int sizeY)
 		{
 			if (sizeX > 0 && sizeY > 0)
@@ -36,7 +38,6 @@ namespace BattleOfTheShipsData
 			return false;
 		}
 
-		//FIX IT for both directions
 		public IShip PlaceShip(IMapPoint[] shipArea)
 		{
 			//mark marigin
@@ -46,20 +47,14 @@ namespace BattleOfTheShipsData
 				{
 					for (int y = -1; y < 2; y++)
 						MapArea[mp.X + x, mp.Y + y].IsBlocked = true;
-				}
-				
+				}				
 			}
+
 			var newShip = new Ship(shipArea);
 			_ships.Add(newShip);
 			return newShip;
 		}
 
-		public bool PlaceShot(int x, int y)
-		{
-			if (x >= _mapPoints.GetLength(0) || y >= _mapPoints.GetLength(1) || x <0 || y < 0)
-				throw new InvalidShotException(x, y);
-
-			return _mapPoints[x, y].IsShip;
-		}
+		IMapPoint this[int x, int y] { get => _mapPoints[x,y]; }
 	}
 }

@@ -10,5 +10,7 @@ namespace BattleofTheShipsInterfaces
 		int MaxY { get; }
 		IMapPoint[,] MapArea { get; }
 		IEnumerable<IShip> Ships { get; }
+
+		IMapPoint this[int x,int y] { get; }
 	}
 }

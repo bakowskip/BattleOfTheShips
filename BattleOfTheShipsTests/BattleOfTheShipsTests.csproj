@@ -67,11 +67,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShipTests.cs" />
     <Compile Include="ComputerPlayerTests.cs" />
+    <Compile Include="ConsolePresenterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BattleOfTheShipsConsolePresenter\BattleOfTheShipsConsolePresenter.csproj">
+      <Project>{c98df12c-e33e-4d03-a773-69b206cef9d9}</Project>
+      <Name>BattleOfTheShipsConsolePresenter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BattleOfTheShipsData\BattleOfTheShipsData.csproj">
       <Project>{9428a966-d70d-4467-bb22-1b1526310128}</Project>
       <Name>BattleOfTheShipsData</Name>

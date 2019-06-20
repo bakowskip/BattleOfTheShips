@@ -14,7 +14,8 @@ namespace BattleOfTheShipsConsolePresenter
 		private const int START_CHAR = (int)'A';
 		public void ShowMap(IGameMap map)
 		{
-			Console.Clear();
+			if (!Console.IsOutputRedirected)
+				Console.Clear();
 
 			Console.BackgroundColor = ConsoleColor.White;
 			Console.ForegroundColor = ConsoleColor.Black;
@@ -38,22 +39,22 @@ namespace BattleOfTheShipsConsolePresenter
 				Console.ForegroundColor = ConsoleColor.Black;
 				for (int x = 0; x < map.MaxX; x++)
 				{
-					if (map.MapArea[x, y].IsHidden)
+					if (map[x, y].IsHidden)
 						Console.Write("   ");
 					else
-					if (map.MapArea[x, y].WasHit)
+					if (map[x, y].WasHit)
 					{
-						if (map.MapArea[x, y].IsShip)
+						if (map[x, y].IsShip)
 						{
-							Console.ForegroundColor = map.MapArea[x, y].Ship.WasSank ? ConsoleColor.Red : ConsoleColor.Yellow;
-							if (map.MapArea[x - 1, y].IsShip)
+							Console.ForegroundColor = map[x, y].Ship.WasSank ? ConsoleColor.Red : ConsoleColor.Yellow;
+							if (map[x - 1, y].IsShip)
 								Console.Write("█");
 							else
 								Console.Write(" ");
 
 							Console.Write("█");
 
-							if (map.MapArea[x + 1, y].IsShip)
+							if (map[x + 1, y].IsShip)
 								Console.Write("█");
 							else
 								Console.Write(" ");
@@ -81,9 +82,9 @@ namespace BattleOfTheShipsConsolePresenter
 			else
 			{
 				if (wasSank)
-					strBuilder.Append(" hit and sank a ship!");
+					strBuilder.Append("hit and sank a ship!");
 				else
-					strBuilder.Append(" hit and did not sink a ship!");
+					strBuilder.Append("hit but did not sink a ship!");
 			}		
 
 			Console.WriteLine(strBuilder.ToString());
@@ -92,18 +93,26 @@ namespace BattleOfTheShipsConsolePresenter
 		public IMapPoint ConvertUserInputToMapPoint(string coordinates)
 		{
 			int x=0,y=0;
-
-			try 
-			{
-				char cX = coordinates.ToCharArray()[0];				
-
-				x = (int)cX - START_CHAR;
-				y = int.Parse(coordinates.Substring(1)) - 1;
-			}
-			catch 
-			{
+			
+			if (coordinates.Length <2 || coordinates.Length > 3)
 				throw new MapPointException(x, y, $"Invalit target coordinates: {coordinates}");
+
+			char cX = coordinates.ToUpper().ToCharArray()[0];
+			if (Char.IsLetter(cX))
+			{
+				x = (int)cX - START_CHAR;
 			}
+			else
+				throw new MapPointException(x, y, $"Invalit target coordinates: {coordinates}");
+
+			if (x< 0 || x > 20)
+				throw new MapPointException(x, y, $"Invalit target coordinates: {coordinates}");
+
+			if (!int.TryParse(coordinates.Substring(1), out y) || y < 1 || y > 20)
+				throw new MapPointException(x, y, $"Invalit target coordinates: {coordinates}");
+			else
+				y = y - 1;
+
 
 			return new MapPoint(x, y);
 		}

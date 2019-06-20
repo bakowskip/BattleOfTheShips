@@ -13,7 +13,7 @@ namespace BattleOfTheShipsLogic
     {
 		
 		private IGameMap _map;
-
+		public IList<IShip> Ships { get; set; }
 		public bool IsGameOver { get => Ships.All(s => s.WasSank); }
 		private bool CanShipBePlacedHorizontally(IMapPoint origin, int size)
 		{
@@ -22,7 +22,7 @@ namespace BattleOfTheShipsLogic
 
 			for (int i=0;i<size;i++)
 			{
-				if (_map.MapArea[origin.X + i, origin.Y].IsBlocked)
+				if (_map[origin.X + i, origin.Y].IsBlocked)
 					return false;
 			}
 			return true;
@@ -36,7 +36,7 @@ namespace BattleOfTheShipsLogic
 
 			for (int i = 0; i < size; i++)
 			{
-				if (_map.MapArea[origin.X , origin.Y+i].IsBlocked)
+				if (_map[origin.X , origin.Y+i].IsBlocked)
 					return false;
 			}
 			return true;
@@ -44,15 +44,15 @@ namespace BattleOfTheShipsLogic
 
 		private void PlaceShipHorizontally(IMapPoint origin, int size)
 		{
-			IMapPoint[] shipArea = new MapPoint[size];
+			IMapPoint[] shipArea = new IMapPoint[size];
 			//mark marigin
 			for (int x=0;x<size+1;x++)
 			{
 				for (int y=0;y<3;y++)
 				{
-					_map.MapArea[origin.X - 1 + x, origin.Y - 1 + y].IsBlocked = true;
+					_map[origin.X - 1 + x, origin.Y - 1 + y].IsBlocked = true;
 					if (y == 1 && (x > 0 && x <= size))
-						shipArea[x - 1] = _map.MapArea[origin.X - 1 + x, origin.Y - 1 + y];
+						shipArea[x - 1] = _map[origin.X - 1 + x, origin.Y - 1 + y];
 				}
 			}
 			var ship = _map.PlaceShip(shipArea);
@@ -62,22 +62,22 @@ namespace BattleOfTheShipsLogic
 
 		private void PlaceShipVertically(IMapPoint origin, int size)
 		{
-			IMapPoint[] shipArea = new MapPoint[size];
+			IMapPoint[] shipArea = new IMapPoint[size];
 			//mark marigin and collect ship's map points
 			for (int x = 0; x < 3 + 1; x++)
 			{
 				for (int y = 0; y < size +1; y++)
 				{
-					_map.MapArea[origin.X - 1 + x, origin.Y - 1 + y].IsBlocked = true;
+					_map[origin.X - 1 + x, origin.Y - 1 + y].IsBlocked = true;
 					if (x == 1 && (y > 0 && y <= size))
-						shipArea[y - 1] = _map.MapArea[origin.X - 1 + x, origin.Y - 1 + y];
+						shipArea[y - 1] = _map[origin.X - 1 + x, origin.Y - 1 + y];
 				}
 			}
-			Ships.Add(new Ship(shipArea));
-			_map.PlaceShip(shipArea);
+			var ship = _map.PlaceShip(shipArea);
+			Ships.Add(ship);
 		}
 
-		public IList<IShip> Ships { get; set; }
+		
 		public ComputerPlayer(IGameMap gameMap)
 		{
 			if (gameMap == null || gameMap.MapArea == null)
@@ -109,30 +109,30 @@ namespace BattleOfTheShipsLogic
 					x = rng.Next(1, _map.MaxX - 2);
 					y = rng.Next(1, _map.MaxY - 2);
 
-					canBeHorizontal = CanShipBePlacedHorizontally(_map.MapArea[x, y], shipSize);
-					canBeVertical = CanShipBePlacedVertically(_map.MapArea[x, y], shipSize);
+					canBeHorizontal = CanShipBePlacedHorizontally(_map[x, y], shipSize);
+					canBeVertical = CanShipBePlacedVertically(_map[x, y], shipSize);
 
 					if (canBeHorizontal && canBeVertical)
 					{
 						if (rng.Next() % 2 == 0)
 						{
-							PlaceShipHorizontally(_map.MapArea[x, y], shipSize);
+							PlaceShipHorizontally(_map[x, y], shipSize);
 							shipPlaced = true;
 						}
 						else
 						{
-							PlaceShipVertically(_map.MapArea[x, y], shipSize);
+							PlaceShipVertically(_map[x, y], shipSize);
 							shipPlaced = true;
 						}
 					}
 					else if (canBeHorizontal)
 					{
-						PlaceShipHorizontally(_map.MapArea[x, y], shipSize);
+						PlaceShipHorizontally(_map[x, y], shipSize);
 						shipPlaced = true;
 					}
 					else if (canBeVertical)
 					{
-						PlaceShipVertically(_map.MapArea[x, y], shipSize);
+						PlaceShipVertically(_map[x, y], shipSize);
 						shipPlaced = true;
 					}
 
@@ -149,14 +149,19 @@ namespace BattleOfTheShipsLogic
 		{
 			var sr = new ShotResult();
 
-			_map.MapArea[shotPlace.X, shotPlace.Y].WasHit = true;
-			_map.MapArea[shotPlace.X, shotPlace.Y].IsHidden = false;
-
-			if (_map.MapArea[shotPlace.X, shotPlace.Y].IsShip)
+			if (shotPlace.X > _map.MaxX || shotPlace.Y > _map.MaxY || shotPlace.X < 0 || shotPlace.Y < 0)
 			{
-				_map.MapArea[shotPlace.X, shotPlace.Y].WasHit = true;
+				throw new MapPointException(shotPlace.X, shotPlace.Y, "Invalid shot target");
+			}
+
+			_map[shotPlace.X, shotPlace.Y].WasHit = true;
+			_map[shotPlace.X, shotPlace.Y].IsHidden = false;
+
+			if (_map[shotPlace.X, shotPlace.Y].IsShip)
+			{
+				_map[shotPlace.X, shotPlace.Y].WasHit = true;
 				sr.WasHit = true;
-				sr.WasSank = _map.MapArea[shotPlace.X, shotPlace.Y].Ship.WasSank;
+				sr.WasSank = _map[shotPlace.X, shotPlace.Y].Ship.WasSank;
 			}
 			return sr;
 		}

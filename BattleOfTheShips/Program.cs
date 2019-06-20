@@ -56,7 +56,7 @@ namespace BattleOfTheShips
 						_presenter.ShowMap(_gameMap);
 
 						_presenter.ShowMessage("Please enter coordinates for your next shot in the form of: C4  (or type q! to quit)", false);
-						targetInput = Console.ReadLine().ToUpper();
+						targetInput = Console.ReadLine().Trim().ToUpper();
 
 						System.Text.RegularExpressions.Regex regx = new System.Text.RegularExpressions.Regex(@"^[a-wA-W]\d{1,2}$");
 
