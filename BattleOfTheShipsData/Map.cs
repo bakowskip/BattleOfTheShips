@@ -19,7 +19,7 @@ namespace BattleOfTheShipsData
 
 		public IEnumerable<IShip> Ships { get => _ships; }
 
-		IMapPoint IGameMap.this[int x, int y] => throw new NotImplementedException();
+		IMapPoint IGameMap.this[int x, int y] => _mapPoints[x, y];
 
 		public bool SetupMap(int sizeX, int sizeY)
 		{
@@ -54,7 +54,5 @@ namespace BattleOfTheShipsData
 			_ships.Add(newShip);
 			return newShip;
 		}
-
-		IMapPoint this[int x, int y] { get => _mapPoints[x,y]; }
 	}
 }
